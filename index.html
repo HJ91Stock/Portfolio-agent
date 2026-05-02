@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ── Reset & Variables ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
   --bg:     #060810;
@@ -38,6 +39,8 @@ body {
     radial-gradient(ellipse 40% 30% at 90% 10%, rgba(0,229,160,.04) 0%, transparent 60%);
   background-attachment: fixed;
 }
+
+/* ── App Shell ── */
 #app {
   display: flex;
   flex-direction: column;
@@ -46,6 +49,8 @@ body {
   padding-top: var(--safe-top);
   padding-bottom: var(--safe-bot);
 }
+
+/* ── Topbar ── */
 #topbar {
   display: flex;
   align-items: center;
@@ -66,6 +71,8 @@ body {
 .brand-name { font-family: 'Space Mono', monospace; font-size: 15px; font-weight: 700; color: #fff; }
 .brand-sub  { font-size: 9px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
 .topbar-btns { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+
+/* ── Buttons ── */
 .btn {
   padding: 8px 14px; border-radius: 7px; font-size: 11px; font-weight: 700;
   cursor: pointer; border: 1px solid var(--b2); background: var(--card); color: var(--text);
@@ -76,6 +83,8 @@ body {
 .btn-green  { background: var(--green) !important; color: #000 !important; border-color: var(--green) !important; }
 .btn-blue   { background: rgba(77,143,255,.13); color: var(--blue); border-color: rgba(77,143,255,.35); }
 .btn-sm     { padding: 6px 11px; font-size: 10px; }
+
+/* ── API status pill ── */
 .api-pill {
   display: flex; align-items: center; gap: 5px; padding: 5px 10px;
   border-radius: 20px; border: 1px solid; font-size: 10px;
@@ -84,12 +93,14 @@ body {
 .api-pill.none { border-color: rgba(255,194,51,.3); color: var(--yellow); background: rgba(255,194,51,.07); }
 .blink { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: blink 2s infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+/* ── Nav tabs (bottom for iPad) ── */
 #nav {
   display: flex;
   background: var(--panel);
   border-top: 1px solid var(--b1);
   flex-shrink: 0;
-  order: 99;
+  order: 99; /* push to bottom */
 }
 .nav-tab {
   flex: 1; padding: 12px 4px 10px; text-align: center;
@@ -100,7 +111,16 @@ body {
 }
 .nav-tab .nav-icon { font-size: 18px; display: block; margin-bottom: 3px; }
 .nav-tab.on { color: var(--green); border-top-color: var(--green); }
-#content { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+/* ── Content area ── */
+#content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── KPI strip ── */
 #kpi-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -110,13 +130,20 @@ body {
   border-bottom: 1px solid var(--b1);
   flex-shrink: 0;
 }
-.kpi { background: var(--card); border: 1px solid var(--b1); border-radius: 9px; padding: 10px 12px; }
+.kpi {
+  background: var(--card); border: 1px solid var(--b1);
+  border-radius: 9px; padding: 10px 12px;
+}
 .kpi-lbl { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
 .kpi-val { font-family: 'Space Mono', monospace; font-size: 15px; font-weight: 700; line-height: 1; }
 .kpi-sub { font-size: 9px; color: var(--muted); margin-top: 4px; }
+
+/* ── Scrollable pages ── */
 .page { display: none; flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .page.active { display: block; }
 .page::-webkit-scrollbar { display: none; }
+
+/* ── Holdings table ── */
 .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .tbl { width: 100%; border-collapse: collapse; min-width: 560px; }
 .tbl th {
@@ -128,15 +155,22 @@ body {
 .tbl td { padding: 10px 12px; border-bottom: 1px solid rgba(26,31,53,.6); vertical-align: middle; }
 .tbl tr:last-child td { border-bottom: none; }
 .tbl tr:active td { background: rgba(255,255,255,.025); }
+
 .t-sym  { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 13px; color: #fff; }
 .t-name { font-size: 10px; color: var(--muted); }
 .t-tag  { display: inline-block; font-size: 8px; padding: 1px 5px; border-radius: 3px; background: rgba(255,255,255,.05); color: var(--muted); margin-top: 2px; }
-.badge { display: inline-block; padding: 3px 7px; border-radius: 4px; font-size: 9px; font-weight: 700; text-transform: uppercase; font-family: 'Space Mono', monospace; }
+
+.badge {
+  display: inline-block; padding: 3px 7px; border-radius: 4px;
+  font-size: 9px; font-weight: 700; text-transform: uppercase; font-family: 'Space Mono', monospace;
+}
 .b-hold  { background: rgba(74,82,112,.2);   color: var(--muted);  border: 1px solid rgba(74,82,112,.3); }
 .b-add   { background: rgba(77,143,255,.15); color: var(--blue);   border: 1px solid rgba(77,143,255,.25); }
 .b-sell  { background: rgba(255,61,107,.15); color: var(--red);    border: 1px solid rgba(255,61,107,.25); }
 .b-watch { background: rgba(255,194,51,.12); color: var(--yellow); border: 1px solid rgba(255,194,51,.25); }
 .b-buy   { background: rgba(0,229,160,.15);  color: var(--green);  border: 1px solid rgba(0,229,160,.25); }
+
+/* ── Alloc bars ── */
 .alloc-wrap { padding: 14px 16px; }
 .alloc-item { margin-bottom: 14px; }
 .alloc-row  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
@@ -144,54 +178,137 @@ body {
 .alloc-meta { display: flex; gap: 10px; font-size: 11px; color: var(--muted); align-items: center; }
 .bar-track  { height: 5px; background: var(--b1); border-radius: 3px; overflow: hidden; }
 .bar-fill   { height: 100%; border-radius: 3px; transition: width 1s cubic-bezier(.4,0,.2,1); }
-.s-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 20px; font-size: 9px; background: rgba(255,255,255,.04); border: 1px solid var(--b1); }
+.s-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 7px; border-radius: 20px; font-size: 9px;
+  background: rgba(255,255,255,.04); border: 1px solid var(--b1);
+}
 .s-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-#chat-wrap { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
-#messages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; -webkit-overflow-scrolling: touch; }
+
+/* ── Agent chat panel ── */
+#chat-wrap {
+  display: flex; flex-direction: column;
+  height: 100%; overflow: hidden;
+}
+#messages {
+  flex: 1; overflow-y: auto; padding: 14px;
+  display: flex; flex-direction: column; gap: 12px;
+  -webkit-overflow-scrolling: touch;
+}
 #messages::-webkit-scrollbar { display: none; }
+
 .msg { display: flex; gap: 9px; align-items: flex-start; animation: fadeUp .25s ease; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
-.avatar { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.avatar {
+  width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
+}
 .avatar.bot  { background: linear-gradient(135deg, var(--green), var(--blue)); }
 .avatar.user { background: var(--b2); }
-.bubble { background: var(--card); border: 1px solid var(--b1); border-radius: 10px; padding: 10px 13px; font-size: 13px; line-height: 1.75; word-break: break-word; white-space: pre-wrap; max-width: calc(100% - 42px); }
+.bubble {
+  background: var(--card); border: 1px solid var(--b1); border-radius: 10px;
+  padding: 10px 13px; font-size: 13px; line-height: 1.75; word-break: break-word;
+  white-space: pre-wrap; max-width: calc(100% - 42px);
+}
 .bubble.user { background: rgba(77,143,255,.09); border-color: rgba(77,143,255,.2); }
+
 .typing-row { display: flex; gap: 4px; align-items: center; padding: 4px 2px; }
-.typing-row span { width: 6px; height: 6px; border-radius: 50%; background: var(--green); opacity: .4; animation: tb 1.2s infinite ease-in-out; }
+.typing-row span {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--green); opacity: .4;
+  animation: tb 1.2s infinite ease-in-out;
+}
 .typing-row span:nth-child(2) { animation-delay:.2s }
 .typing-row span:nth-child(3) { animation-delay:.4s }
 @keyframes tb { 0%,60%,100%{transform:translateY(0);opacity:.35} 30%{transform:translateY(-5px);opacity:1} }
-#quick-row { padding: 10px 12px; border-top: 1px solid var(--b1); display: flex; gap: 6px; overflow-x: auto; flex-shrink: 0; -webkit-overflow-scrolling: touch; background: var(--bg); }
+
+/* ── Quick prompt chips ── */
+#quick-row {
+  padding: 10px 12px; border-top: 1px solid var(--b1);
+  display: flex; gap: 6px; overflow-x: auto; flex-shrink: 0;
+  -webkit-overflow-scrolling: touch; background: var(--bg);
+}
 #quick-row::-webkit-scrollbar { display: none; }
-.qchip { padding: 6px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; flex-shrink: 0; border: 1px solid var(--b2); background: transparent; color: var(--muted); font-family: 'Barlow', sans-serif; white-space: nowrap; user-select: none; transition: all .15s; -webkit-appearance: none; }
+.qchip {
+  padding: 6px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; flex-shrink: 0;
+  border: 1px solid var(--b2); background: transparent; color: var(--muted);
+  font-family: 'Barlow', sans-serif; white-space: nowrap; user-select: none;
+  transition: all .15s; -webkit-appearance: none;
+}
 .qchip:active { border-color: var(--green); color: var(--green); background: rgba(0,229,160,.07); }
-#input-row { padding: 10px 12px; border-top: 1px solid var(--b1); display: flex; gap: 8px; background: var(--panel); flex-shrink: 0; }
-#chat-input { flex: 1; background: var(--card); border: 1px solid var(--b2); border-radius: 8px; padding: 10px 13px; color: var(--text); font-family: 'Barlow', sans-serif; font-size: 14px; outline: none; -webkit-appearance: none; transition: border-color .2s; }
+
+/* ── Chat input ── */
+#input-row {
+  padding: 10px 12px; border-top: 1px solid var(--b1);
+  display: flex; gap: 8px; background: var(--panel); flex-shrink: 0;
+}
+#chat-input {
+  flex: 1; background: var(--card); border: 1px solid var(--b2);
+  border-radius: 8px; padding: 10px 13px; color: var(--text);
+  font-family: 'Barlow', sans-serif; font-size: 14px; outline: none;
+  -webkit-appearance: none; transition: border-color .2s;
+}
 #chat-input:focus { border-color: var(--green); }
 #chat-input::placeholder { color: var(--muted); }
-#lbar { height: 2px; background: linear-gradient(90deg, transparent, var(--green), var(--blue), transparent); background-size: 200% 100%; animation: shimmer 1.5s infinite; display: none; flex-shrink: 0; }
+
+/* ── Loading bar ── */
+#lbar {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--green), var(--blue), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  display: none; flex-shrink: 0;
+}
 #lbar.on { display: block; }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-#modal-bg { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(6,8,16,.92); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; }
+
+/* ── Modal (API Key) ── */
+#modal-bg {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(6,8,16,.92); backdrop-filter: blur(8px);
+  align-items: center; justify-content: center; padding: 20px;
+}
 #modal-bg.on { display: flex; }
-#modal { background: var(--card); border: 1px solid var(--b2); border-radius: 14px; padding: 28px; max-width: 440px; width: 100%; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+#modal {
+  background: var(--card); border: 1px solid var(--b2);
+  border-radius: 14px; padding: 28px; max-width: 440px; width: 100%;
+  box-shadow: 0 30px 80px rgba(0,0,0,.6);
+}
 #modal h2 { font-family: 'Space Mono', monospace; font-size: 17px; color: #fff; margin-bottom: 8px; }
 #modal p  { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 18px; }
-#modal-input { width: 100%; background: var(--panel); border: 1px solid var(--b2); border-radius: 8px; padding: 12px 13px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 12px; outline: none; margin-bottom: 13px; -webkit-appearance: none; transition: border-color .2s; }
+#modal-input {
+  width: 100%; background: var(--panel); border: 1px solid var(--b2);
+  border-radius: 8px; padding: 12px 13px; color: var(--text);
+  font-family: 'Space Mono', monospace; font-size: 12px; outline: none;
+  margin-bottom: 13px; -webkit-appearance: none; transition: border-color .2s;
+}
 #modal-input:focus { border-color: var(--green); }
 #modal-input::placeholder { color: var(--muted); }
-.modal-note { margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7; padding: 10px 12px; background: rgba(255,255,255,.03); border-radius: 6px; border: 1px solid var(--b1); }
+.modal-note {
+  margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
+  padding: 10px 12px; background: rgba(255,255,255,.03);
+  border-radius: 6px; border: 1px solid var(--b1);
+}
 .modal-note a { color: var(--blue); }
+
+/* ── Color helpers ── */
 .green  { color: var(--green) !important; }
 .red    { color: var(--red) !important; }
 .yellow { color: var(--yellow) !important; }
 .cyan   { color: var(--cyan) !important; }
 .muted  { color: var(--muted) !important; }
 .mono   { font-family: 'Space Mono', monospace; }
+
+/* ── Responsive: landscape iPad ── */
 @media (min-width: 900px) and (orientation: landscape) {
   #content { flex-direction: row; }
-  #left-col { width: 55%; border-right: 1px solid var(--b1); display: flex; flex-direction: column; overflow: hidden; }
-  #right-col { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  #left-col {
+    width: 55%;
+    border-right: 1px solid var(--b1);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  #right-col {
+    flex: 1; display: flex; flex-direction: column; overflow: hidden;
+  }
   #nav { display: none; }
   #page-holdings, #page-alloc, #page-sectors { display: block !important; }
   #left-tabs { display: flex; }
@@ -199,9 +316,22 @@ body {
   .page { height: 100%; }
   #chat-wrap { height: 100%; }
 }
-#left-tabs { display: none; border-bottom: 1px solid var(--b1); background: var(--panel); flex-shrink: 0; }
-.ltab { padding: 10px 16px; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; transition: all .15s; font-family: 'Space Mono', monospace; user-select: none; }
+
+/* ── Left tabs (landscape only) ── */
+#left-tabs {
+  display: none;
+  border-bottom: 1px solid var(--b1);
+  background: var(--panel); flex-shrink: 0;
+}
+.ltab {
+  padding: 10px 16px; font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; cursor: pointer; color: var(--muted);
+  border-bottom: 2px solid transparent; transition: all .15s;
+  font-family: 'Space Mono', monospace; user-select: none;
+}
 .ltab.on { color: var(--green); border-bottom-color: var(--green); }
+
+/* ── Scrollable left content ── */
 #left-pages { flex: 1; overflow: hidden; }
 #left-pages .lpage { display: none; height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 #left-pages .lpage.active { display: block; }
@@ -209,6 +339,8 @@ body {
 </style>
 </head>
 <body>
+
+<!-- API Key Modal -->
 <div id="modal-bg">
   <div id="modal">
     <h2>🔑 设置 API Key</h2>
@@ -224,7 +356,11 @@ body {
     </div>
   </div>
 </div>
+
+<!-- App Shell -->
 <div id="app">
+
+  <!-- Topbar -->
   <div id="topbar">
     <div class="brand">
       <div class="brand-icon">🎯</div>
@@ -240,14 +376,38 @@ body {
       <button class="btn btn-green btn-sm" id="btn-analyze" onclick="runFullAnalysis()">🤖 全仓分析</button>
     </div>
   </div>
+
+  <!-- Loading bar -->
   <div id="lbar"></div>
+
+  <!-- KPI Strip -->
   <div id="kpi-strip">
-    <div class="kpi"><div class="kpi-lbl">总市值</div><div class="kpi-val" id="kpi-mv">—</div><div class="kpi-sub" id="kpi-mv-sub">成本估算</div></div>
-    <div class="kpi"><div class="kpi-lbl">总盈亏</div><div class="kpi-val" id="kpi-pnl">—</div><div class="kpi-sub" id="kpi-pnl-sub">获取报价后显示</div></div>
-    <div class="kpi"><div class="kpi-lbl">今日盈亏</div><div class="kpi-val" id="kpi-day">—</div><div class="kpi-sub">日内波动</div></div>
-    <div class="kpi"><div class="kpi-lbl">成本基础</div><div class="kpi-val cyan" id="kpi-cost">—</div><div class="kpi-sub">13 支持仓</div></div>
+    <div class="kpi">
+      <div class="kpi-lbl">总市值</div>
+      <div class="kpi-val" id="kpi-mv">—</div>
+      <div class="kpi-sub" id="kpi-mv-sub">成本估算</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">总盈亏</div>
+      <div class="kpi-val" id="kpi-pnl">—</div>
+      <div class="kpi-sub" id="kpi-pnl-sub">获取报价后显示</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">今日盈亏</div>
+      <div class="kpi-val" id="kpi-day">—</div>
+      <div class="kpi-sub">日内波动</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">成本基础</div>
+      <div class="kpi-val cyan" id="kpi-cost">—</div>
+      <div class="kpi-sub">13 支持仓</div>
+    </div>
   </div>
+
+  <!-- Main Content -->
   <div id="content">
+
+    <!-- Left column (landscape) / pages (portrait) -->
     <div id="left-col">
       <div id="left-tabs">
         <div class="ltab on" onclick="showLtab('holdings',this)">📊 持仓</div>
@@ -257,23 +417,44 @@ body {
       <div id="left-pages">
         <div class="lpage active" id="lpage-holdings">
           <div class="tbl-wrap"><table class="tbl" id="holdings-tbl">
-            <thead><tr><th>股票</th><th>数量</th><th>成本</th><th>现价</th><th>今日%</th><th>盈亏%</th><th>市值</th><th>信号</th></tr></thead>
+            <thead><tr>
+              <th>股票</th><th>数量</th><th>成本</th><th>现价</th>
+              <th>今日%</th><th>盈亏%</th><th>市值</th><th>信号</th>
+            </tr></thead>
             <tbody id="holdings-body"></tbody>
           </table></div>
         </div>
-        <div class="lpage" id="lpage-alloc"><div class="alloc-wrap" id="alloc-body"></div></div>
-        <div class="lpage" id="lpage-sectors"><div class="alloc-wrap" id="sector-body"></div></div>
+        <div class="lpage" id="lpage-alloc">
+          <div class="alloc-wrap" id="alloc-body"></div>
+        </div>
+        <div class="lpage" id="lpage-sectors">
+          <div class="alloc-wrap" id="sector-body"></div>
+        </div>
       </div>
     </div>
+
+    <!-- Right column (landscape) / chat page (portrait) -->
     <div id="right-col">
+
+      <!-- Portrait pages -->
       <div class="page active" id="page-holdings">
         <div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th>股票</th><th>数量</th><th>成本</th><th>现价</th><th>今日%</th><th>盈亏%</th><th>市值</th><th>信号</th></tr></thead>
+          <thead><tr>
+            <th>股票</th><th>数量</th><th>成本</th><th>现价</th>
+            <th>今日%</th><th>盈亏%</th><th>市值</th><th>信号</th>
+          </tr></thead>
           <tbody id="holdings-body-p"></tbody>
         </table></div>
       </div>
-      <div class="page" id="page-alloc"><div class="alloc-wrap" id="alloc-body-p"></div></div>
-      <div class="page" id="page-sectors"><div class="alloc-wrap" id="sector-body-p"></div></div>
+
+      <div class="page" id="page-alloc">
+        <div class="alloc-wrap" id="alloc-body-p"></div>
+      </div>
+
+      <div class="page" id="page-sectors">
+        <div class="alloc-wrap" id="sector-body-p"></div>
+      </div>
+
       <div class="page" id="page-chat" style="display:flex;flex-direction:column;overflow:hidden;">
         <div id="chat-wrap">
           <div id="messages"></div>
@@ -284,16 +465,24 @@ body {
           </div>
         </div>
       </div>
+
     </div>
   </div>
+
+  <!-- Bottom nav (portrait) -->
   <div id="nav">
     <div class="nav-tab on" onclick="showPage('holdings',this)"><span class="nav-icon">📊</span>持仓</div>
     <div class="nav-tab" onclick="showPage('alloc',this)"><span class="nav-icon">🥧</span>分布</div>
     <div class="nav-tab" onclick="showPage('sectors',this)"><span class="nav-icon">🏭</span>板块</div>
     <div class="nav-tab" onclick="showPage('chat',this)"><span class="nav-icon">🤖</span>Agent</div>
   </div>
+
 </div>
+
 <script>
+/* ══════════════════════════════════════════════
+   PORTFOLIO DATA
+══════════════════════════════════════════════ */
 const PORTFOLIO = [
   { ticker:"ALAB", name:"Astera Labs",     qty:100,  cost:79.00,  sector:"半导体/AI", type:"stock" },
   { ticker:"CRCL", name:"Circle Internet", qty:200,  cost:217.30, sector:"加密金融",  type:"stock" },
@@ -309,118 +498,433 @@ const PORTFOLIO = [
   { ticker:"QQQM", name:"Nasdaq-100 ETF",  qty:68,   cost:147.77, sector:"指数ETF",   type:"etf"   },
   { ticker:"SPY",  name:"S&P 500 ETF",     qty:50,   cost:433.57, sector:"指数ETF",   type:"etf"   },
 ];
+
 const SECTOR_COLORS = {
   "半导体/AI":"#00e5a0","加密金融":"#f7931a","半导体":"#4ade80","科技":"#6c8eff",
   "云计算":"#38bdf8","电动车/AI":"#fb923c","数据中心":"#a78bfa","SaaS通信":"#f472b6",
   "基因组ETF":"#34d399","指数ETF":"#94a3b8"
 };
+
 const QUICK_PROMPTS = [
   "📊 分析整体仓位状况","🔥 哪些股票需要立即操作？","⚠️ 当前最大风险点",
   "💰 今日盈亏估算","🎯 仓位调整建议","📈 NVDA 最新分析",
   "💎 加密持仓 COIN+CRCL","🧬 ARKG 基因ETF","🔍 FCUV 风险评估","📉 亏损最大持仓"
 ];
+
 const SYSTEM_PROMPT = `你是一位专属股票投资顾问 Agent，专门追踪分析以下真实持仓：
 ALAB(Astera Labs) 100股 成本$79 | CRCL(Circle Internet) 200股 成本$217.3 | COIN(Coinbase) 200股 成本$378.15
 FCUV(Focus Universal) 718股 成本$320.06 | INTC(Intel) 200股 成本$52.12 | NVDA(NVIDIA) 575股 成本$192.8
 ORCL(Oracle) 480股 成本$176.79 | TSLA(Tesla) 300股 成本$146.78 | VRT(Vertiv) 300股 成本$84
 ZM(Zoom) 50股 成本$249 | ARKG(ARK基因ETF) 120股 成本$83.41 | QQQM(纳斯达克ETF) 68股 成本$147.77 | SPY 50股 成本$433.57
 用中文回答，专业直接，给出具体数字和可执行建议。有最新新闻必须提及。`;
-let prices = {}, pricesLoaded = false, thinking = false, chatHistory = [];
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+let prices = {};
+let pricesLoaded = false;
+let thinking = false;
+let chatHistory = [];
 let apiKey = localStorage.getItem('pa_key') || '';
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', () => {
-  updateApiPill(); renderPortfolio(); renderQuickPrompts(); addWelcomeMsg(); updateKPIs();
-  document.getElementById('chat-input').addEventListener('keydown', e => { if (e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();} });
-  document.getElementById('modal-input').addEventListener('keydown', e => { if (e.key==='Enter') saveKey(); });
+  updateApiPill();
+  renderPortfolio();
+  renderQuickPrompts();
+  addWelcomeMsg();
+  updateKPIs();
+
+  document.getElementById('chat-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+  });
+  document.getElementById('modal-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') saveKey();
+  });
 });
-function openModal() { document.getElementById('modal-bg').classList.add('on'); document.getElementById('modal-cancel-btn').style.display=apiKey?'':'none'; setTimeout(()=>document.getElementById('modal-input').focus(),100); }
+
+/* ══════════════════════════════════════════════
+   API KEY MODAL
+══════════════════════════════════════════════ */
+function openModal() {
+  document.getElementById('modal-bg').classList.add('on');
+  document.getElementById('modal-cancel-btn').style.display = apiKey ? '' : 'none';
+  setTimeout(() => document.getElementById('modal-input').focus(), 100);
+}
 function closeModal() { document.getElementById('modal-bg').classList.remove('on'); }
-function saveKey() { const k=document.getElementById('modal-input').value.trim(); if(!k)return; apiKey=k; localStorage.setItem('pa_key',k); updateApiPill(); closeModal(); document.getElementById('modal-input').value=''; }
-function updateApiPill() { const pill=document.getElementById('api-pill'),txt=document.getElementById('api-pill-text'); if(apiKey){pill.className='api-pill ok';txt.textContent='API 已配置';}else{pill.className='api-pill none';txt.textContent='未配置 Key';} }
-function showPage(id,el) { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('on')); document.getElementById('page-'+id).classList.add('active'); if(el)el.classList.add('on'); }
-function showLtab(id,el) { document.querySelectorAll('#left-tabs .ltab').forEach(t=>t.classList.remove('on')); document.querySelectorAll('#left-pages .lpage').forEach(p=>p.classList.remove('active')); el.classList.add('on'); document.getElementById('lpage-'+id).classList.add('active'); }
-function getPortfolioData() { return PORTFOLIO.map(h=>{ const p=prices[h.ticker]; const price=p?p.price:h.cost,change=p?p.change:0,changePct=p?p.changePct:0,mktVal=price*h.qty,pnlPct=((price-h.cost)/h.cost)*100; return{...h,price,change,changePct,mktVal,pnlPct}; }); }
-function getSignal(h) { if(!pricesLoaded)return'hold'; if(h.pnlPct<-25)return'watch'; if(h.pnlPct>120)return'sell'; if(h.pnlPct>70&&h.changePct<-2)return'sell'; if(h.changePct<-4)return'add'; if(h.pnlPct<-15)return'watch'; return'hold'; }
-const SIG_LABEL={hold:'持有',add:'加仓',sell:'卖出',watch:'观察',buy:'买入'};
-const SIG_CLASS={hold:'b-hold',add:'b-add',sell:'b-sell',watch:'b-watch',buy:'b-buy'};
-function fmt$(n,d=0){return'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});}
-function updateKPIs() {
-  const pd=getPortfolioData(),totalMV=pd.reduce((s,h)=>s+h.mktVal,0),totalCost=PORTFOLIO.reduce((s,h)=>s+h.cost*h.qty,0),totalPnl=totalMV-totalCost,totalPct=(totalPnl/totalCost)*100,dayPnl=pd.reduce((s,h)=>s+h.change*h.qty,0);
-  document.getElementById('kpi-mv').textContent=fmt$(totalMV);
-  document.getElementById('kpi-mv-sub').textContent=pricesLoaded?'实时报价':'成本估算';
-  document.getElementById('kpi-cost').textContent=fmt$(totalCost);
-  if(pricesLoaded){
-    const pe=document.getElementById('kpi-pnl'); pe.textContent=(totalPnl>=0?'+':'')+fmt$(totalPnl); pe.className='kpi-val '+(totalPnl>=0?'green':'red');
-    document.getElementById('kpi-pnl-sub').textContent=(totalPct>=0?'▲':'▼')+' '+Math.abs(totalPct).toFixed(2)+'%';
-    document.getElementById('kpi-pnl-sub').className=totalPct>=0?'kpi-sub green':'kpi-sub red';
-    const de=document.getElementById('kpi-day'); de.textContent=(dayPnl>=0?'+':'')+fmt$(dayPnl); de.className='kpi-val '+(dayPnl>=0?'green':'red');
+function saveKey() {
+  const k = document.getElementById('modal-input').value.trim();
+  if (!k) return;
+  apiKey = k;
+  localStorage.setItem('pa_key', k);
+  updateApiPill();
+  closeModal();
+  document.getElementById('modal-input').value = '';
+}
+function updateApiPill() {
+  const pill = document.getElementById('api-pill');
+  const txt  = document.getElementById('api-pill-text');
+  if (apiKey) {
+    pill.className = 'api-pill ok';
+    txt.textContent = 'API 已配置';
+  } else {
+    pill.className = 'api-pill none';
+    txt.textContent = '未配置 Key';
   }
 }
+
+/* ══════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════ */
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (el) el.classList.add('on');
+}
+function showLtab(id, el) {
+  document.querySelectorAll('#left-tabs .ltab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('#left-pages .lpage').forEach(p => p.classList.remove('active'));
+  el.classList.add('on');
+  document.getElementById('lpage-' + id).classList.add('active');
+}
+
+/* ══════════════════════════════════════════════
+   DERIVED PORTFOLIO DATA
+══════════════════════════════════════════════ */
+function getPortfolioData() {
+  return PORTFOLIO.map(h => {
+    const p = prices[h.ticker];
+    const price     = p ? p.price     : h.cost;
+    const change    = p ? p.change    : 0;
+    const changePct = p ? p.changePct : 0;
+    const mktVal    = price * h.qty;
+    const pnlPct    = ((price - h.cost) / h.cost) * 100;
+    return { ...h, price, change, changePct, mktVal, pnlPct };
+  });
+}
+
+function getSignal(h) {
+  if (!pricesLoaded) return 'hold';
+  if (h.pnlPct < -25) return 'watch';
+  if (h.pnlPct > 120) return 'sell';
+  if (h.pnlPct > 70 && h.changePct < -2) return 'sell';
+  if (h.changePct < -4) return 'add';
+  if (h.pnlPct < -15) return 'watch';
+  return 'hold';
+}
+const SIG_LABEL = { hold:'持有', add:'加仓', sell:'卖出', watch:'观察', buy:'买入' };
+const SIG_CLASS = { hold:'b-hold', add:'b-add', sell:'b-sell', watch:'b-watch', buy:'b-buy' };
+
+function fmt$(n, d=0) {
+  return '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits:d, maximumFractionDigits:d});
+}
+
+/* ══════════════════════════════════════════════
+   UPDATE KPIs
+══════════════════════════════════════════════ */
+function updateKPIs() {
+  const pd = getPortfolioData();
+  const totalMV   = pd.reduce((s,h) => s+h.mktVal, 0);
+  const totalCost = PORTFOLIO.reduce((s,h) => s+h.cost*h.qty, 0);
+  const totalPnl  = totalMV - totalCost;
+  const totalPct  = (totalPnl / totalCost) * 100;
+  const dayPnl    = pd.reduce((s,h) => s+h.change*h.qty, 0);
+
+  document.getElementById('kpi-mv').textContent    = fmt$(totalMV);
+  document.getElementById('kpi-mv-sub').textContent = pricesLoaded ? '实时报价' : '成本估算';
+  document.getElementById('kpi-cost').textContent  = fmt$(totalCost);
+
+  if (pricesLoaded) {
+    const pnlEl = document.getElementById('kpi-pnl');
+    pnlEl.textContent  = (totalPnl>=0?'+':'')+fmt$(totalPnl);
+    pnlEl.className    = 'kpi-val ' + (totalPnl>=0?'green':'red');
+    document.getElementById('kpi-pnl-sub').textContent  = (totalPct>=0?'▲':'▼')+' '+Math.abs(totalPct).toFixed(2)+'%';
+    document.getElementById('kpi-pnl-sub').className    = totalPct>=0?'kpi-sub green':'kpi-sub red';
+
+    const dayEl = document.getElementById('kpi-day');
+    dayEl.textContent = (dayPnl>=0?'+':'')+fmt$(dayPnl);
+    dayEl.className   = 'kpi-val ' + (dayPnl>=0?'green':'red');
+  }
+}
+
+/* ══════════════════════════════════════════════
+   RENDER HOLDINGS TABLE
+══════════════════════════════════════════════ */
 function renderPortfolio() {
-  const pd=getPortfolioData().sort((a,b)=>b.mktVal-a.mktVal);
-  const rows=pd.map(h=>{ const sig=getSignal(h); return`<tr><td><div class="t-sym">${h.ticker}</div><div class="t-name">${h.name}</div><div class="t-tag">${h.sector}</div></td><td class="mono" style="font-size:12px">${h.qty.toLocaleString()}</td><td class="mono muted" style="font-size:11px">$${h.cost}</td><td class="mono" style="font-size:12px;font-weight:700">${pricesLoaded?'$'+h.price.toFixed(2):'<span class="muted">—</span>'}</td><td class="mono ${h.changePct>=0?'green':'red'}" style="font-size:11px">${pricesLoaded?(h.changePct>=0?'+':'')+h.changePct.toFixed(2)+'%':'—'}</td><td class="mono ${pricesLoaded?(h.pnlPct>=0?'green':'red'):''}" style="font-size:12px;font-weight:700">${pricesLoaded?(h.pnlPct>=0?'+':'')+h.pnlPct.toFixed(1)+'%':'—'}</td><td class="mono" style="font-size:11px">${fmt$(h.mktVal)}</td><td><span class="badge ${SIG_CLASS[sig]}">${SIG_LABEL[sig]}</span></td></tr>`; }).join('');
-  ['holdings-body','holdings-body-p'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=rows;});
-  renderAlloc(pd); renderSectors(pd);
+  const pd = getPortfolioData().sort((a,b) => b.mktVal - a.mktVal);
+
+  function makeRows(pd) {
+    return pd.map(h => {
+      const sig = getSignal(h);
+      return `<tr>
+        <td>
+          <div class="t-sym">${h.ticker}</div>
+          <div class="t-name">${h.name}</div>
+          <div class="t-tag">${h.sector}</div>
+        </td>
+        <td class="mono" style="font-size:12px">${h.qty.toLocaleString()}</td>
+        <td class="mono muted" style="font-size:11px">$${h.cost}</td>
+        <td class="mono" style="font-size:12px;font-weight:700">${pricesLoaded ? '$'+h.price.toFixed(2) : '<span class="muted">—</span>'}</td>
+        <td class="mono ${h.changePct>=0?'green':'red'}" style="font-size:11px">
+          ${pricesLoaded ? (h.changePct>=0?'+':'')+h.changePct.toFixed(2)+'%' : '—'}
+        </td>
+        <td class="mono ${pricesLoaded?(h.pnlPct>=0?'green':'red'):''}" style="font-size:12px;font-weight:700">
+          ${pricesLoaded ? (h.pnlPct>=0?'+':'')+h.pnlPct.toFixed(1)+'%' : '—'}
+        </td>
+        <td class="mono" style="font-size:11px">${fmt$(h.mktVal)}</td>
+        <td><span class="badge ${SIG_CLASS[sig]}">${SIG_LABEL[sig]}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  const rows = makeRows(pd);
+  const b1 = document.getElementById('holdings-body');
+  const b2 = document.getElementById('holdings-body-p');
+  if (b1) b1.innerHTML = rows;
+  if (b2) b2.innerHTML = rows;
+
+  renderAlloc(pd);
+  renderSectors(pd);
 }
+
 function renderAlloc(pd) {
-  const totalMV=pd.reduce((s,h)=>s+h.mktVal,0);
-  const html=pd.map(h=>{ const pct=(h.mktVal/totalMV*100).toFixed(1),color=SECTOR_COLORS[h.sector]||'#6c8eff'; return`<div class="alloc-item"><div class="alloc-row"><div style="display:flex;align-items:center;gap:9px"><span class="alloc-sym">${h.ticker}</span><span class="s-pill"><span class="s-dot" style="background:${color}"></span>${h.sector}</span></div><div class="alloc-meta"><span>${fmt$(h.mktVal)}</span><span class="mono" style="font-weight:700;color:var(--text)">${pct}%</span></div></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div></div>`; }).join('');
-  ['alloc-body','alloc-body-p'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
+  const totalMV = pd.reduce((s,h)=>s+h.mktVal,0);
+  function makeAlloc(pd) {
+    return pd.map(h => {
+      const pct = (h.mktVal/totalMV*100).toFixed(1);
+      const color = SECTOR_COLORS[h.sector]||'#6c8eff';
+      return `<div class="alloc-item">
+        <div class="alloc-row">
+          <div style="display:flex;align-items:center;gap:9px">
+            <span class="alloc-sym">${h.ticker}</span>
+            <span class="s-pill"><span class="s-dot" style="background:${color}"></span>${h.sector}</span>
+          </div>
+          <div class="alloc-meta">
+            <span>${fmt$(h.mktVal)}</span>
+            <span class="mono" style="font-weight:700;color:var(--text)">${pct}%</span>
+          </div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      </div>`;
+    }).join('');
+  }
+  const html = makeAlloc(pd);
+  const a1 = document.getElementById('alloc-body');
+  const a2 = document.getElementById('alloc-body-p');
+  if (a1) a1.innerHTML = html;
+  if (a2) a2.innerHTML = html;
 }
+
 function renderSectors(pd) {
-  const totalMV=pd.reduce((s,h)=>s+h.mktVal,0),sectors={};
-  pd.forEach(h=>{sectors[h.sector]=(sectors[h.sector]||0)+h.mktVal;});
-  const html=Object.entries(sectors).sort((a,b)=>b[1]-a[1]).map(([sector,val])=>{ const pct=(val/totalMV*100).toFixed(1),color=SECTOR_COLORS[sector]||'#888',stocks=pd.filter(h=>h.sector===sector).map(h=>h.ticker).join(', '); return`<div class="alloc-item"><div class="alloc-row"><div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span><span style="font-weight:700;color:#fff">${sector}</span><span style="font-size:10px;color:var(--muted)">${stocks}</span></div><span class="mono" style="font-size:12px;font-weight:700">${pct}%</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div><div style="font-size:10px;color:var(--muted);margin-top:3px">${fmt$(val)}</div></div>`; }).join('');
-  ['sector-body','sector-body-p'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
+  const totalMV = pd.reduce((s,h)=>s+h.mktVal,0);
+  const sectors = {};
+  pd.forEach(h => { sectors[h.sector]=(sectors[h.sector]||0)+h.mktVal; });
+  const html = Object.entries(sectors).sort((a,b)=>b[1]-a[1]).map(([sector,val]) => {
+    const pct = (val/totalMV*100).toFixed(1);
+    const color = SECTOR_COLORS[sector]||'#888';
+    const stocks = pd.filter(h=>h.sector===sector).map(h=>h.ticker).join(', ');
+    return `<div class="alloc-item">
+      <div class="alloc-row">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span>
+          <span style="font-weight:700;color:#fff">${sector}</span>
+          <span style="font-size:10px;color:var(--muted)">${stocks}</span>
+        </div>
+        <span class="mono" style="font-size:12px;font-weight:700">${pct}%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px">${fmt$(val)}</div>
+    </div>`;
+  }).join('');
+  const s1 = document.getElementById('sector-body');
+  const s2 = document.getElementById('sector-body-p');
+  if (s1) s1.innerHTML = html;
+  if (s2) s2.innerHTML = html;
 }
+
+/* ══════════════════════════════════════════════
+   FETCH LIVE PRICES
+══════════════════════════════════════════════ */
 async function fetchPrices() {
-  if(!apiKey){openModal();return;}
-  setLoading(true); document.getElementById('btn-prices').disabled=true;
-  const tickers=PORTFOLIO.map(h=>h.ticker).join(', ');
+  if (!apiKey) { openModal(); return; }
+  setLoading(true);
+  document.getElementById('btn-prices').disabled = true;
+  const tickers = PORTFOLIO.map(h=>h.ticker).join(', ');
   try {
-    const data=await callClaude({tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:`Search current stock prices of: ${tickers}. Return ONLY valid JSON (no markdown): {"ALAB":{"price":0,"change":0,"changePct":0},...} include all 13 tickers.`}]});
-    const text=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
-    const m=text.match(/\{[\s\S]*\}/);
-    if(m){prices=JSON.parse(m[0]);pricesLoaded=true;renderPortfolio();updateKPIs();}else throw new Error('解析失败');
-  } catch(e) { useMockPrices(); addMsg('bot',`⚠️ 实时报价获取失败（${e.message}）。已用模拟数据展示。`); }
-  setLoading(false); document.getElementById('btn-prices').disabled=false;
+    const data = await callClaude({
+      tools: [{ type:'web_search_20250305', name:'web_search' }],
+      messages: [{
+        role:'user',
+        content:`Search for current stock prices of: ${tickers}. Return ONLY valid JSON (no markdown):
+{"ALAB":{"price":0,"change":0,"changePct":0},...} — include all 13 tickers with latest market price.`
+      }]
+    });
+    const text = (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+    const m = text.match(/\{[\s\S]*\}/);
+    if (m) {
+      prices = JSON.parse(m[0]);
+      pricesLoaded = true;
+      renderPortfolio();
+      updateKPIs();
+    } else throw new Error('解析失败');
+  } catch(e) {
+    useMockPrices();
+    addMsg('bot', `⚠️ 实时报价获取失败（${e.message}）。已用模拟数据展示。\n请确认 API Key 正确后重试。`);
+  }
+  setLoading(false);
+  document.getElementById('btn-prices').disabled = false;
 }
+
 function useMockPrices() {
-  PORTFOLIO.forEach(h=>{const drift=0.75+Math.random()*0.65,price=+(h.cost*drift).toFixed(2),chgPct=+((Math.random()-0.45)*4).toFixed(2);prices[h.ticker]={price,change:+(price*chgPct/100).toFixed(2),changePct:chgPct};});
-  pricesLoaded=true; renderPortfolio(); updateKPIs();
+  PORTFOLIO.forEach(h => {
+    const drift = 0.75 + Math.random()*0.65;
+    const price = +(h.cost*drift).toFixed(2);
+    const chgPct = +((Math.random()-0.45)*4).toFixed(2);
+    prices[h.ticker] = { price, change:+(price*chgPct/100).toFixed(2), changePct:chgPct };
+  });
+  pricesLoaded = true;
+  renderPortfolio();
+  updateKPIs();
 }
-async function callClaude({messages,system,tools,max_tokens=1000}) {
-  if(!apiKey)throw new Error('未设置 API Key');
-  const body={model:'claude-sonnet-4-20250514',max_tokens,messages};
-  if(system)body.system=system; if(tools)body.tools=tools;
-  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify(body)});
-  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+r.status);}
+
+/* ══════════════════════════════════════════════
+   CLAUDE API
+══════════════════════════════════════════════ */
+async function callClaude({ messages, system, tools, max_tokens=1000 }) {
+  if (!apiKey) throw new Error('未设置 API Key');
+  const body = { model:'claude-sonnet-4-20250514', max_tokens, messages };
+  if (system) body.system = system;
+  if (tools)  body.tools  = tools;
+  const r = await fetch('https://portfolio-proxy.karenhj1991.workers.dev', {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version':'2023-06-01',
+    },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) {
+    const e = await r.json().catch(()=>({}));
+    throw new Error(e?.error?.message||'HTTP '+r.status);
+  }
   return r.json();
 }
-function addWelcomeMsg() { const totalCost=PORTFOLIO.reduce((s,h)=>s+h.cost*h.qty,0); addMsg('bot',`你好！我是你的专属投资组合 Agent 🤖\n\n已加载 13 支持仓，总成本约 ${fmt$(totalCost)}。\n\n点击顶部「⚡ 实时报价」更新价格，或直接向我提问开始分析。`); }
-function addMsg(role,text) { const wrap=document.getElementById('messages'),div=document.createElement('div'); div.className='msg'; div.innerHTML=`<div class="avatar ${role==='bot'?'bot':'user'}">${role==='bot'?'🤖':'👤'}</div><div class="bubble ${role==='user'?'user':''}">${escHtml(text)}</div>`; wrap.appendChild(div); wrap.scrollTop=wrap.scrollHeight; }
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function showTyping() { const wrap=document.getElementById('messages'),div=document.createElement('div'); div.className='msg';div.id='typing-indicator'; div.innerHTML=`<div class="avatar bot">🤖</div><div class="bubble"><div class="typing-row"><span></span><span></span><span></span></div><span style="font-size:11px;color:var(--muted)">正在搜索并分析...</span></div>`; wrap.appendChild(div); wrap.scrollTop=wrap.scrollHeight; }
-function hideTyping(){const t=document.getElementById('typing-indicator');if(t)t.remove();}
-async function sendMsg(overrideText) {
-  const input=document.getElementById('chat-input'),text=overrideText||input.value.trim();
-  if(!text||thinking)return; if(!apiKey){openModal();return;}
-  showPage('chat',document.querySelector('.nav-tab:last-child'));
-  addMsg('user',text); input.value=''; thinking=true; document.getElementById('send-btn').disabled=true; showTyping();
-  const pd=getPortfolioData(),totalMV=pd.reduce((s,h)=>s+h.mktVal,0),totalCost=PORTFOLIO.reduce((s,h)=>s+h.cost*h.qty,0);
-  const ctx=pd.map(h=>pricesLoaded?`${h.ticker}: 现价$${h.price.toFixed(2)} 成本$${h.cost} ${h.qty}股 盈亏${h.pnlPct.toFixed(1)}% 今日${h.changePct>=0?'+':''}${h.changePct.toFixed(2)}%`:`${h.ticker}: 成本$${h.cost} ${h.qty}股`).join('\n');
-  const userContent=`[持仓数据 ${new Date().toLocaleString('zh-CN')}]\n${ctx}\n总市值: ${fmt$(totalMV)} | 成本: ${fmt$(totalCost)}\n\n${text}`;
-  const histMsgs=chatHistory.slice(-8).map(m=>({role:m.role==='bot'?'assistant':'user',content:m.text}));
-  chatHistory.push({role:'user',text});
-  try {
-    const data=await callClaude({system:SYSTEM_PROMPT,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[...histMsgs,{role:'user',content:userContent}]});
-    const reply=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('')||'抱歉，无法获取响应，请重试。';
-    hideTyping(); addMsg('bot',reply); chatHistory.push({role:'bot',text:reply});
-  } catch(e) { hideTyping(); addMsg('bot',`⚠️ 请求失败：${e.message}\n\n请检查 API Key 是否正确。`); }
-  thinking=false; document.getElementById('send-btn').disabled=false;
+
+/* ══════════════════════════════════════════════
+   CHAT
+══════════════════════════════════════════════ */
+function addWelcomeMsg() {
+  const totalCost = PORTFOLIO.reduce((s,h)=>s+h.cost*h.qty,0);
+  addMsg('bot', `你好！我是你的专属投资组合 Agent 🤖\n\n已加载 13 支持仓，总成本约 ${fmt$(totalCost)}。\n\n点击顶部「⚡ 实时报价」更新价格，或直接向我提问开始分析。`);
 }
-async function runFullAnalysis(){sendMsg('请搜索我持仓所有股票的最新行情和重要新闻，给出今日完整仓位分析和具体操作建议（含每支股票建议操作数量和理由）');}
-function renderQuickPrompts(){document.getElementById('quick-row').innerHTML=QUICK_PROMPTS.map(q=>`<button class="qchip" onclick="sendMsg('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');}
-function setLoading(on){document.getElementById('lbar').classList.toggle('on',on);}
+
+function addMsg(role, text) {
+  const wrap = document.getElementById('messages');
+  const div  = document.createElement('div');
+  div.className = 'msg';
+  div.innerHTML = `
+    <div class="avatar ${role==='bot'?'bot':'user'}">${role==='bot'?'🤖':'👤'}</div>
+    <div class="bubble ${role==='user'?'user':''}">${escHtml(text)}</div>`;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showTyping() {
+  const wrap = document.getElementById('messages');
+  const div  = document.createElement('div');
+  div.className = 'msg'; div.id = 'typing-indicator';
+  div.innerHTML = `
+    <div class="avatar bot">🤖</div>
+    <div class="bubble">
+      <div class="typing-row"><span></span><span></span><span></span></div>
+      <span style="font-size:11px;color:var(--muted)">正在搜索并分析...</span>
+    </div>`;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+function hideTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
+
+async function sendMsg(overrideText) {
+  const input = document.getElementById('chat-input');
+  const text  = overrideText || input.value.trim();
+  if (!text || thinking) return;
+  if (!apiKey) { openModal(); return; }
+
+  // Show on chat page (portrait)
+  showPage('chat', document.querySelector('.nav-tab:last-child'));
+
+  addMsg('user', text);
+  input.value = '';
+  thinking = true;
+  document.getElementById('send-btn').disabled = true;
+  showTyping();
+
+  // Build context
+  const pd = getPortfolioData();
+  const totalMV   = pd.reduce((s,h)=>s+h.mktVal,0);
+  const totalCost = PORTFOLIO.reduce((s,h)=>s+h.cost*h.qty,0);
+  const ctx = pd.map(h => {
+    if (pricesLoaded) {
+      return `${h.ticker}: 现价$${h.price.toFixed(2)} 成本$${h.cost} ${h.qty}股 盈亏${h.pnlPct.toFixed(1)}% 今日${h.changePct>=0?'+':''}${h.changePct.toFixed(2)}%`;
+    }
+    return `${h.ticker}: 成本$${h.cost} ${h.qty}股`;
+  }).join('\n');
+
+  const userContent = `[持仓数据 ${new Date().toLocaleString('zh-CN')}]\n${ctx}\n总市值: ${fmt$(totalMV)} | 成本: ${fmt$(totalCost)}\n\n${text}`;
+
+  const histMsgs = chatHistory.slice(-8).map(m => ({role:m.role==='bot'?'assistant':'user', content:m.text}));
+  chatHistory.push({role:'user', text});
+
+  try {
+    const data = await callClaude({
+      system: SYSTEM_PROMPT,
+      tools: [{ type:'web_search_20250305', name:'web_search' }],
+      messages: [...histMsgs, {role:'user', content: userContent}]
+    });
+    const reply = (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('') || '抱歉，无法获取响应，请重试。';
+    hideTyping();
+    addMsg('bot', reply);
+    chatHistory.push({role:'bot', text:reply});
+  } catch(e) {
+    hideTyping();
+    addMsg('bot', `⚠️ 请求失败：${e.message}\n\n请点击右上角「🔑 API Key」检查 Key 是否正确。`);
+  }
+
+  thinking = false;
+  document.getElementById('send-btn').disabled = false;
+}
+
+async function runFullAnalysis() {
+  sendMsg('请搜索我持仓所有股票的最新行情和重要新闻，给出今日完整仓位分析和具体操作建议（含每支股票建议操作数量和理由）');
+}
+
+/* ══════════════════════════════════════════════
+   QUICK PROMPTS
+══════════════════════════════════════════════ */
+function renderQuickPrompts() {
+  const row = document.getElementById('quick-row');
+  row.innerHTML = QUICK_PROMPTS.map(q =>
+    `<button class="qchip" onclick="sendMsg('${q.replace(/'/g,"\\'")}')>${q}</button>`
+  ).join('');
+}
+
+/* ══════════════════════════════════════════════
+   LOADING
+══════════════════════════════════════════════ */
+function setLoading(on) {
+  document.getElementById('lbar').classList.toggle('on', on);
+}
 </script>
 </body>
 </html>
