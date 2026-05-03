@@ -227,6 +227,7 @@ const PORTFOLIO = [
   { ticker:"QQQM", name:"Nasdaq-100 ETF",  qty:68,   cost:147.77, sector:"指数ETF",   type:"etf"   },
   { ticker:"SPY",  name:"S&P 500 ETF",     qty:50,   cost:433.57, sector:"指数ETF",   type:"etf"   },
 ];
+const AV_KEY = '7Q8CRD7I718KIYQA';
 const SECTOR_COLORS = {"半导体/AI":"#00e5a0","加密金融":"#f7931a","半导体":"#4ade80","科技":"#6c8eff","云计算":"#38bdf8","电动车/AI":"#fb923c","数据中心":"#a78bfa","SaaS通信":"#f472b6","基因组ETF":"#34d399","指数ETF":"#94a3b8"};
 const QUICK_PROMPTS = ["📊 分析整体仓位状况","🔥 哪些股票需要立即操作？","⚠️ 当前最大风险点","💰 今日盈亏估算","🎯 仓位调整建议","📈 NVDA 最新分析","💎 加密持仓 COIN+CRCL","🧬 ARKG 基因ETF","🔍 FCUV 风险评估","📉 亏损最大持仓"];
 const SYSTEM_PROMPT = `你是一位专属股票投资顾问 Agent，专门追踪分析以下真实持仓：
@@ -253,14 +254,35 @@ function getSignal(h){if(!pricesLoaded)return'hold';if(h.pnlPct<-25)return'watch
 const SIG_LABEL={hold:'持有',add:'加仓',sell:'卖出',watch:'观察',buy:'买入'};
 const SIG_CLASS={hold:'b-hold',add:'b-add',sell:'b-sell',watch:'b-watch',buy:'b-buy'};
 function fmt$(n,d=0){return'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});}
-function updateKPIs(){const pd=getPortfolioData(),totalMV=pd.reduce((s,h)=>s+h.mktVal,0),totalCost=PORTFOLIO.reduce((s,h)=>s+h.cost*h.qty,0),totalPnl=totalMV-totalCost,totalPct=(totalPnl/totalCost)*100,dayPnl=pd.reduce((s,h)=>s+h.change*h.qty,0);document.getElementById('kpi-mv').textContent=fmt$(totalMV);document.getElementById('kpi-mv-sub').textContent=pricesLoaded?'实时报价':'成本估算';document.getElementById('kpi-cost').textContent=fmt$(totalCost);if(pricesLoaded){const pe=document.getElementById('kpi-pnl');pe.textContent=(totalPnl>=0?'+':'')+fmt$(totalPnl);pe.className='kpi-val '+(totalPnl>=0?'green':'red');document.getElementById('kpi-pnl-sub').textContent=(totalPct>=0?'▲':'▼')+' '+Math.abs(totalPct).toFixed(2)+'%';document.getElementById('kpi-pnl-sub').className=totalPct>=0?'kpi-sub green':'kpi-sub red';const de=document.getElementById('kpi-day');de.textContent=(dayPnl>=0?'+':'')+fmt$(dayPnl);de.className='kpi-val '+(dayPnl>=0?'green':'red');}}
+function updateKPIs(){const pd=getPortfolioData(),totalMV=pd.reduce((s,h)=>s+h.mktVal,0),totalCost=PORTFOLIO.reduce((s,h)=>s+h.cost*h.qty,0),totalPnl=totalMV-totalCost,totalPct=(totalPnl/totalCost)*100,dayPnl=pd.reduce((s,h)=>s+h.change*h.qty,0);document.getElementById('kpi-mv').textContent=fmt$(totalMV);document.getElementById('kpi-mv-sub').textContent=pricesLoaded?'Alpha Vantage 实时':'成本估算';document.getElementById('kpi-cost').textContent=fmt$(totalCost);if(pricesLoaded){const pe=document.getElementById('kpi-pnl');pe.textContent=(totalPnl>=0?'+':'')+fmt$(totalPnl);pe.className='kpi-val '+(totalPnl>=0?'green':'red');document.getElementById('kpi-pnl-sub').textContent=(totalPct>=0?'▲':'▼')+' '+Math.abs(totalPct).toFixed(2)+'%';document.getElementById('kpi-pnl-sub').className=totalPct>=0?'kpi-sub green':'kpi-sub red';const de=document.getElementById('kpi-day');de.textContent=(dayPnl>=0?'+':'')+fmt$(dayPnl);de.className='kpi-val '+(dayPnl>=0?'green':'red');}}
 function renderPortfolio(){const pd=getPortfolioData().sort((a,b)=>b.mktVal-a.mktVal);const rows=pd.map(h=>{const sig=getSignal(h);return`<tr><td><div class="t-sym">${h.ticker}</div><div class="t-name">${h.name}</div><div class="t-tag">${h.sector}</div></td><td class="mono" style="font-size:12px">${h.qty.toLocaleString()}</td><td class="mono muted" style="font-size:11px">$${h.cost}</td><td class="mono" style="font-size:12px;font-weight:700">${pricesLoaded?'$'+h.price.toFixed(2):'<span class="muted">—</span>'}</td><td class="mono ${h.changePct>=0?'green':'red'}" style="font-size:11px">${pricesLoaded?(h.changePct>=0?'+':'')+h.changePct.toFixed(2)+'%':'—'}</td><td class="mono ${pricesLoaded?(h.pnlPct>=0?'green':'red'):''}" style="font-size:12px;font-weight:700">${pricesLoaded?(h.pnlPct>=0?'+':'')+h.pnlPct.toFixed(1)+'%':'—'}</td><td class="mono" style="font-size:11px">${fmt$(h.mktVal)}</td><td><span class="badge ${SIG_CLASS[sig]}">${SIG_LABEL[sig]}</span></td></tr>`;}).join('');['holdings-body','holdings-body-p'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=rows;});renderAlloc(pd);renderSectors(pd);}
 function renderAlloc(pd){const totalMV=pd.reduce((s,h)=>s+h.mktVal,0);const html=pd.map(h=>{const pct=(h.mktVal/totalMV*100).toFixed(1),color=SECTOR_COLORS[h.sector]||'#6c8eff';return`<div class="alloc-item"><div class="alloc-row"><div style="display:flex;align-items:center;gap:9px"><span class="alloc-sym">${h.ticker}</span><span class="s-pill"><span class="s-dot" style="background:${color}"></span>${h.sector}</span></div><div class="alloc-meta"><span>${fmt$(h.mktVal)}</span><span class="mono" style="font-weight:700;color:var(--text)">${pct}%</span></div></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div></div>`;}).join('');['alloc-body','alloc-body-p'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});}
 function renderSectors(pd){const totalMV=pd.reduce((s,h)=>s+h.mktVal,0),sectors={};pd.forEach(h=>{sectors[h.sector]=(sectors[h.sector]||0)+h.mktVal;});const html=Object.entries(sectors).sort((a,b)=>b[1]-a[1]).map(([sector,val])=>{const pct=(val/totalMV*100).toFixed(1),color=SECTOR_COLORS[sector]||'#888',stocks=pd.filter(h=>h.sector===sector).map(h=>h.ticker).join(', ');return`<div class="alloc-item"><div class="alloc-row"><div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span><span style="font-weight:700;color:#fff">${sector}</span><span style="font-size:10px;color:var(--muted)">${stocks}</span></div><span class="mono" style="font-size:12px;font-weight:700">${pct}%</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div><div style="font-size:10px;color:var(--muted);margin-top:3px">${fmt$(val)}</div></div>`;}).join('');['sector-body','sector-body-p'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});}
-async function fetchPrices(){if(!apiKey){openModal();return;}setLoading(true);document.getElementById('btn-prices').disabled=true;const tickers=PORTFOLIO.map(h=>h.ticker).join(', ');try{const data=await callClaude({messages:[{role:'user',content:`Give me estimated current prices for these stocks: ${tickers}. Return ONLY valid JSON (no markdown, no explanation): {"ALAB":{"price":0,"change":0,"changePct":0},...} include all 13 tickers.`}]});const text=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');const m=text.match(/\{[\s\S]*\}/);if(m){prices=JSON.parse(m[0]);pricesLoaded=true;renderPortfolio();updateKPIs();}else throw new Error('解析失败');}catch(e){useMockPrices();addMsg('bot',`⚠️ 报价获取失败（${e.message}）。已用模拟数据展示。`);}setLoading(false);document.getElementById('btn-prices').disabled=false;}
-function useMockPrices(){PORTFOLIO.forEach(h=>{const drift=0.75+Math.random()*0.65,price=+(h.cost*drift).toFixed(2),chgPct=+((Math.random()-0.45)*4).toFixed(2);prices[h.ticker]={price,change:+(price*chgPct/100).toFixed(2),changePct:chgPct};});pricesLoaded=true;renderPortfolio();updateKPIs();}
+async function fetchPrices(){
+  setLoading(true);document.getElementById('btn-prices').disabled=true;
+  addMsg('bot','⏳ 正在从 Alpha Vantage 获取实时报价，每支股票需要约1秒，共13支，请稍候...');
+  const results={};let success=0,fail=0;
+  for(const h of PORTFOLIO){
+    try{
+      const url=`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${h.ticker}&apikey=${AV_KEY}`;
+      const r=await fetch(url);const d=await r.json();
+      const q=d['Global Quote'];
+      if(q&&q['05. price']){
+        const price=parseFloat(q['05. price']);
+        const change=parseFloat(q['09. change']);
+        const changePct=parseFloat(q['10. change percent'].replace('%',''));
+        results[h.ticker]={price,change,changePct};
+        success++;
+      }else{fail++;results[h.ticker]={price:h.cost,change:0,changePct:0};}
+    }catch(e){fail++;results[h.ticker]={price:h.cost,change:0,changePct:0};}
+    await new Promise(r=>setTimeout(r,1200));
+  }
+  prices=results;pricesLoaded=true;renderPortfolio();updateKPIs();
+  addMsg('bot',`✅ 报价获取完成！成功 ${success} 支，失败 ${fail} 支。${fail>0?'\n⚠️ 免费版每分钟限25次，部分可能使用成本价代替。':''}`);
+  setLoading(false);document.getElementById('btn-prices').disabled=false;
+}
 async function callClaude({messages,system,max_tokens=1000}){if(!apiKey)throw new Error('未设置 API Key');const body={model:'claude-sonnet-4-5',max_tokens,messages};if(system)body.system=system;const r=await fetch('https://portfolio-proxy.karenhj1991.workers.dev',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},body:JSON.stringify(body)});if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+r.status);}return r.json();}
-function addWelcomeMsg(){const totalCost=PORTFOLIO.reduce((s,h)=>s+h.cost*h.qty,0);addMsg('bot',`你好！我是你的专属投资组合 Agent 🤖\n\n已加载 13 支持仓，总成本约 ${fmt$(totalCost)}。\n\n点击「⚡ 实时报价」获取价格，或直接向我提问开始分析。`);}
+function addWelcomeMsg(){const totalCost=PORTFOLIO.reduce((s,h)=>s+h.cost*h.qty,0);addMsg('bot',`你好！我是你的专属投资组合 Agent 🤖\n\n已加载 13 支持仓，总成本约 ${fmt$(totalCost)}。\n\n点击「⚡ 实时报价」从 Alpha Vantage 获取真实价格（约15秒），或直接向我提问。`);}
 function addMsg(role,text){const wrap=document.getElementById('messages'),div=document.createElement('div');div.className='msg';div.innerHTML=`<div class="avatar ${role==='bot'?'bot':'user'}">${role==='bot'?'🤖':'👤'}</div><div class="bubble ${role==='user'?'user':''}">${escHtml(text)}</div>`;wrap.appendChild(div);wrap.scrollTop=wrap.scrollHeight;}
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function showTyping(){const wrap=document.getElementById('messages'),div=document.createElement('div');div.className='msg';div.id='typing-indicator';div.innerHTML=`<div class="avatar bot">🤖</div><div class="bubble"><div class="typing-row"><span></span><span></span><span></span></div><span style="font-size:11px;color:var(--muted)">正在分析...</span></div>`;wrap.appendChild(div);wrap.scrollTop=wrap.scrollHeight;}
@@ -272,4 +294,3 @@ function setLoading(on){document.getElementById('lbar').classList.toggle('on',on
 </script>
 </body>
 </html>
-
