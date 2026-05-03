@@ -138,7 +138,7 @@ body { font-family: 'Barlow', sans-serif; color: var(--text); font-size: 14px; b
 #left-pages .lpage.active { display: block; }
 #left-pages .lpage::-webkit-scrollbar { display: none; }
 </style>
-</head>
+  </head>
 <body>
 <div id="modal-bg">
   <div id="modal">
@@ -234,7 +234,7 @@ ALAB(Astera Labs) 100股 成本$79 | CRCL(Circle Internet) 200股 成本$217.3 |
 FCUV(Focus Universal) 718股 成本$320.06 | INTC(Intel) 200股 成本$52.12 | NVDA(NVIDIA) 575股 成本$192.8
 ORCL(Oracle) 480股 成本$176.79 | TSLA(Tesla) 300股 成本$146.78 | VRT(Vertiv) 300股 成本$84
 ZM(Zoom) 50股 成本$249 | ARKG(ARK基因ETF) 120股 成本$83.41 | QQQM(纳斯达克ETF) 68股 成本$147.77 | SPY 50股 成本$433.57
-用中文回答，专业直接，给出具体数字和可执行建议。`;
+用中文回答，专业直接，给出具体数字和可执行建议。有最新新闻必须提及。`;
 let prices={}, pricesLoaded=false, thinking=false, chatHistory=[];
 let apiKey=localStorage.getItem('pa_key')||'';
 window.addEventListener('DOMContentLoaded',()=>{
@@ -259,7 +259,7 @@ function renderAlloc(pd){const totalMV=pd.reduce((s,h)=>s+h.mktVal,0);const html
 function renderSectors(pd){const totalMV=pd.reduce((s,h)=>s+h.mktVal,0),sectors={};pd.forEach(h=>{sectors[h.sector]=(sectors[h.sector]||0)+h.mktVal;});const html=Object.entries(sectors).sort((a,b)=>b[1]-a[1]).map(([sector,val])=>{const pct=(val/totalMV*100).toFixed(1),color=SECTOR_COLORS[sector]||'#888',stocks=pd.filter(h=>h.sector===sector).map(h=>h.ticker).join(', ');return`<div class="alloc-item"><div class="alloc-row"><div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span><span style="font-weight:700;color:#fff">${sector}</span><span style="font-size:10px;color:var(--muted)">${stocks}</span></div><span class="mono" style="font-size:12px;font-weight:700">${pct}%</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div><div style="font-size:10px;color:var(--muted);margin-top:3px">${fmt$(val)}</div></div>`;}).join('');['sector-body','sector-body-p'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});}
 async function fetchPrices(){if(!apiKey){openModal();return;}setLoading(true);document.getElementById('btn-prices').disabled=true;const tickers=PORTFOLIO.map(h=>h.ticker).join(', ');try{const data=await callClaude({messages:[{role:'user',content:`Give me estimated current prices for these stocks: ${tickers}. Return ONLY valid JSON (no markdown, no explanation): {"ALAB":{"price":0,"change":0,"changePct":0},...} include all 13 tickers.`}]});const text=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');const m=text.match(/\{[\s\S]*\}/);if(m){prices=JSON.parse(m[0]);pricesLoaded=true;renderPortfolio();updateKPIs();}else throw new Error('解析失败');}catch(e){useMockPrices();addMsg('bot',`⚠️ 报价获取失败（${e.message}）。已用模拟数据展示。`);}setLoading(false);document.getElementById('btn-prices').disabled=false;}
 function useMockPrices(){PORTFOLIO.forEach(h=>{const drift=0.75+Math.random()*0.65,price=+(h.cost*drift).toFixed(2),chgPct=+((Math.random()-0.45)*4).toFixed(2);prices[h.ticker]={price,change:+(price*chgPct/100).toFixed(2),changePct:chgPct};});pricesLoaded=true;renderPortfolio();updateKPIs();}
-async function callClaude({messages,system,max_tokens=1000}){if(!apiKey)throw new Error('未设置 API Key');const body={model:'claude-sonnet-4-20250514',max_tokens,messages};if(system)body.system=system;const r=await fetch('https://portfolio-proxy.karenhj1991.workers.dev',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},body:JSON.stringify(body)});if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+r.status);}return r.json();}
+async function callClaude({messages,system,max_tokens=1000}){if(!apiKey)throw new Error('未设置 API Key');const body={model:'claude-sonnet-4-5',max_tokens,messages};if(system)body.system=system;const r=await fetch('https://portfolio-proxy.karenhj1991.workers.dev',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},body:JSON.stringify(body)});if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+r.status);}return r.json();}
 function addWelcomeMsg(){const totalCost=PORTFOLIO.reduce((s,h)=>s+h.cost*h.qty,0);addMsg('bot',`你好！我是你的专属投资组合 Agent 🤖\n\n已加载 13 支持仓，总成本约 ${fmt$(totalCost)}。\n\n点击「⚡ 实时报价」获取价格，或直接向我提问开始分析。`);}
 function addMsg(role,text){const wrap=document.getElementById('messages'),div=document.createElement('div');div.className='msg';div.innerHTML=`<div class="avatar ${role==='bot'?'bot':'user'}">${role==='bot'?'🤖':'👤'}</div><div class="bubble ${role==='user'?'user':''}">${escHtml(text)}</div>`;wrap.appendChild(div);wrap.scrollTop=wrap.scrollHeight;}
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -272,3 +272,4 @@ function setLoading(on){document.getElementById('lbar').classList.toggle('on',on
 </script>
 </body>
 </html>
+
